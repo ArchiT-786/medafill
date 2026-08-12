@@ -2,29 +2,31 @@ import { FeatureLdg, InfoLdg, TestimonialType } from "types";
 
 export const infos: InfoLdg[] = [
   {
-    title: "Empower your projects",
-    description:
-      "Unlock the full potential of your projects with our open-source SaaS platform. Collaborate seamlessly, innovate effortlessly, and scale limitlessly.",
-    image: "/_static/illustrations/work-from-home.jpg",
-    list: [
-      {
-        title: "Collaborative",
-        description: "Work together with your team members in real-time.",
-        icon: "laptop",
-      },
-      {
-        title: "Innovative",
-        description: "Stay ahead of the curve with access constant updates.",
-        icon: "settings",
-      },
-      {
-        title: "Scalable",
-        description:
-          "Our platform offers the scalability needed to adapt to your needs.",
-        icon: "search",
-      },
-    ],
-  },
+  title: "Built to Make Healthcare More Accessible",
+  description:
+    "MedaFill is a 24×7 online medical support platform built by Archit to make healthcare faster, simpler, and more dependable. From connecting patients with verified specialists to coordinating emergency care, diagnostics, and home-based services, the platform brings essential healthcare support together in one place.",
+  image: "/_static/illustrations/work-from-home.jpg",
+  list: [
+    {
+      title: "Connected Healthcare",
+      description:
+        "MedaFill connects patients with experienced and verified doctors across specialties, making it easier to find the right medical support when it matters.",
+      icon: "laptop",
+    },
+    {
+      title: "24×7 Medical Support",
+      description:
+        "From online consultations and video appointments to emergency coordination and ambulance support, MedaFill is designed to provide timely assistance around the clock.",
+      icon: "settings",
+    },
+    {
+      title: "Technology With Purpose",
+      description:
+        "Built by Archit with a focus on simplicity, reliability, and scalability, MedaFill uses technology to bring patients, doctors, hospitals, diagnostics, and healthcare partners together.",
+      icon: "search",
+    },
+  ],
+},
   {
     title: "Seamless Integration",
     description:
