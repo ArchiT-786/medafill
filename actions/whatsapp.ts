@@ -15,9 +15,15 @@ type Recipient = {
   phoneNumber: string | null;
 };
 
-export async function sendPatientWhatsApp(
-  patientId: string,
-) {
+type WhatsAppResult = {
+  recipientType: WhatsAppRecipientType;
+  status: WhatsAppMessageStatus;
+  logId: string;
+  messageId?: string;
+  error?: string;
+};
+
+export async function sendPatientWhatsApp(patientId: string) {
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -62,9 +68,11 @@ export async function sendPatientWhatsApp(
     },
   ];
 
-  const results = [];
+  // Explicitly type the results array so TypeScript doesn't infer never[]
+  const results: WhatsAppResult[] = [];
 
   for (const recipient of recipients) {
+    // Skip recipients without a configured phone number
     if (!recipient.phoneNumber?.trim()) {
       const log = await prisma.whatsAppLog.create({
         data: {
@@ -73,8 +81,7 @@ export async function sendPatientWhatsApp(
           phoneNumber: "",
           status: WhatsAppMessageStatus.SKIPPED,
           message,
-          error:
-            "WhatsApp phone number is not configured",
+          error: "WhatsApp phone number is not configured",
         },
       });
 
@@ -87,6 +94,7 @@ export async function sendPatientWhatsApp(
       continue;
     }
 
+    // Create pending log
     const log = await prisma.whatsAppLog.create({
       data: {
         patientId: patient.id,
@@ -98,11 +106,13 @@ export async function sendPatientWhatsApp(
     });
 
     try {
+      // Send WhatsApp message
       const response = await sendWhatsAppMessage({
         phoneNumber: recipient.phoneNumber,
         message,
       });
 
+      // Update log as sent
       await prisma.whatsAppLog.update({
         where: {
           id: log.id,
@@ -126,6 +136,7 @@ export async function sendPatientWhatsApp(
           ? error.message
           : "Unknown WhatsApp API error";
 
+      // Update log as failed
       await prisma.whatsAppLog.update({
         where: {
           id: log.id,
@@ -145,22 +156,17 @@ export async function sendPatientWhatsApp(
     }
   }
 
+  // Calculate summary counts
   const sentCount = results.filter(
-    (result) =>
-      result.status ===
-      WhatsAppMessageStatus.SENT,
+    (result) => result.status === WhatsAppMessageStatus.SENT,
   ).length;
 
   const failedCount = results.filter(
-    (result) =>
-      result.status ===
-      WhatsAppMessageStatus.FAILED,
+    (result) => result.status === WhatsAppMessageStatus.FAILED,
   ).length;
 
   const skippedCount = results.filter(
-    (result) =>
-      result.status ===
-      WhatsAppMessageStatus.SKIPPED,
+    (result) => result.status === WhatsAppMessageStatus.SKIPPED,
   ).length;
 
   return {
