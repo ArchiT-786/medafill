@@ -28,7 +28,9 @@ function SignInModal({
           <a href={siteConfig.url}>
             <Icons.logo className="size-10" />
           </a>
+
           <h3 className="font-urban text-2xl font-bold">Sign In</h3>
+
           {/* <p className="text-sm text-gray-500">
             This is strictly for demo purposes - only your email and profile
             picture will be stored.
@@ -41,11 +43,10 @@ function SignInModal({
             disabled={signInClicked}
             onClick={() => {
               setSignInClicked(true);
-              signIn("google", { redirect: false }).then(() =>
-                setTimeout(() => {
-                  setShowSignInModal(false);
-                }, 400),
-              );
+
+              signIn("google", {
+                callbackUrl: "/",
+              });
             }}
           >
             {signInClicked ? (
